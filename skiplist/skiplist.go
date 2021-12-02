@@ -5,6 +5,20 @@ import "math/rand"
 const SKIPLIST_MAXLEVEL = 32
 const SKIPLIST_BRANCH = 4
 
+// randomLevel returns a random level.
+func randomLevel() int {
+	level := 1
+	for (rand.Int31()&0xFFFF)%SKIPLIST_BRANCH == 0 {
+		level += 1
+	}
+
+	if level < SKIPLIST_MAXLEVEL {
+		return level
+	} else {
+		return SKIPLIST_MAXLEVEL
+	}
+}
+
 type Interface interface {
 	Less(other interface{}) bool
 }
@@ -41,20 +55,6 @@ func newElement(level int, v Interface) *Element {
 		Value:    v,
 		backward: nil,
 		level:    slLevels,
-	}
-}
-
-// randomLevel returns a random level.
-func randomLevel() int {
-	level := 1
-	for (rand.Int31()&0xFFFF)%SKIPLIST_BRANCH == 0 {
-		level += 1
-	}
-
-	if level < SKIPLIST_MAXLEVEL {
-		return level
-	} else {
-		return SKIPLIST_MAXLEVEL
 	}
 }
 

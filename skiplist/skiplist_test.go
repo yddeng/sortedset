@@ -32,9 +32,12 @@ func TestNew(t *testing.T) {
 
 	// insert
 	sl := New()
+	t.Log(sl.Len(), sl.Front(), sl.Back())
+
 	for i := 0; i < len(us); i++ {
 		sl.Insert(us[i])
 	}
+	t.Log(sl.Len(), sl.Front().Value, sl.Back().Value)
 
 	// traverse
 	for e := sl.Front(); e != nil; e = e.Next() {

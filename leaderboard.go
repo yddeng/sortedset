@@ -28,7 +28,8 @@ type Leaderboard struct {
 	CreateAt       int64                     // 创建时间
 	NextResetAt    int64                     // 下一次重置时间
 	Period         time.Duration             // 版本持续周期
-	skipList       *skiplist.SkipList
+
+	skipList *skiplist.SkipList
 }
 
 type Statistic struct {

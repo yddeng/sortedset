@@ -2,61 +2,74 @@ package skiplist
 
 import (
 	"fmt"
+	"math/rand"
+	"strings"
 	"testing"
+	"time"
 )
 
 type User struct {
-	score float64
-	id    string
+	name  string
+	score int
 }
 
-func (u *User) Less(other interface{}) bool {
-	if u.score > other.(*User).score {
-		return true
+func (this *User) Less(other interface{}) bool {
+	return this.score >= other.(*User).score
+}
+
+func printSl(sl *SkipList) {
+	for i := sl.level - 1; i >= 0; i-- {
+		str := []string{}
+		for e := sl.head; e != sl.tail; e = e.links[i].next {
+			str = append(str, fmt.Sprintf("-%d->%v", e.links[i].skip, e.links[i].next.value))
+		}
+		fmt.Println(strings.Join(str, " "))
 	}
-	if u.score == other.(*User).score && len(u.id) > len(other.(*User).id) {
-		return true
+
+	str := ""
+	for e, i := sl.Front(), 1; e != nil; e, i = e.Next(), i+1 {
+		str += fmt.Sprintf("%v  ", e.value)
 	}
-	return false
+	fmt.Println(str)
+
 }
 
 func TestNew(t *testing.T) {
-	us := make([]*User, 7)
-	us[0] = &User{6.6, "hi"}
-	us[1] = &User{4.4, "hello"}
-	us[2] = &User{2.2, "world"}
-	us[3] = &User{3.3, "go"}
-	us[4] = &User{1.1, "skip"}
-	us[5] = &User{2.2, "list"}
-	us[6] = &User{3.3, "lang"}
+	rand.Seed(time.Now().UnixNano())
+	l := New()
 
-	// insert
-	sl := New()
-	t.Log(sl.Len(), sl.Front(), sl.Back())
+	e := l.Insert(&User{name: "1", score: 1})
+	l.Insert(&User{name: "4", score: 4})
+	l.Insert(&User{name: "6", score: 6})
+	l.Insert(&User{name: "3", score: 3})
+	l.Insert(&User{name: "5", score: 5})
+	l.Insert(&User{name: "2", score: 2})
+	l.Insert(&User{name: "33", score: 3})
+	e2 := l.Insert(&User{name: "11", score: 1})
 
-	for i := 0; i < len(us); i++ {
-		sl.Insert(us[i])
-	}
-	t.Log(sl.Len(), sl.Front().Value, sl.Back().Value)
-
-	// traverse
-	for e := sl.Front(); e != nil; e = e.Next() {
-		fmt.Println(e.Value.(*User).id, "-->", e.Value.(*User).score)
-	}
-	t.Log(sl.Len())
-
-	// rank
-	rank1 := sl.GetRank(&User{2.2, "list"})
-	rank2 := sl.GetRank(&User{6.6, "hi"})
-	if rank1 != 6 || rank2 != 1 {
-		t.Fatal()
-	}
-	if e := sl.GetElementByRank(2); e.Value.(*User).score != 4.4 || e.Value.(*User).id != "hello" {
-		t.Fatal(e)
+	t.Log(l.Len())
+	for e, i := l.Front(), 1; e != nil; e, i = e.Next(), i+1 {
+		u := e.Value().(*User)
+		t.Logf("%d, user(%s,%d)", i, u.name, u.score)
 	}
 
-	nu := &User{score: 0, id: "dfsf"}
-	t.Log(sl.Find(nu), sl.GetRank(nu))
+	//for e, i := l.Back(), 1; e != nil; e, i = e.Prev(), i+1 {
+	//	u := e.Value().(*User)
+	//	t.Logf("%d, user(%s,%d)", i, u.name, u.score)
+	//}
+	//printSl(l)
+	//t.Log(e.Rank(), e2.Rank(), l.GetRank(e2))
+	t.Log()
 
-	t.Log(sl.GetRank(us[0]), sl.GetElementByRank(sl.Len()).Value)
+	l.Remove(e)
+	t.Log(l.Len(), e.Rank(), e2.Rank(), l.GetRank(e2))
+	e = l.Insert(e.Value().(*User))
+	t.Log(l.Len(), e.Rank(), e2.Rank(), l.GetRank(e2))
+
+	for e, i := l.Front(), 1; e != nil; e, i = e.Next(), i+1 {
+		u := e.Value().(*User)
+		t.Logf("%d, user(%s,%d)", i, u.name, u.score)
+	}
+
+	t.Log(l.GetElementByRank(1).Value(), l.GetElementByRank(5).Value())
 }

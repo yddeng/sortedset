@@ -164,7 +164,7 @@ func (sl *SkipList) Insert(v Interface) *Element {
 }
 
 // Remove removes e from sl if e is an element of skiplist sl.
-// It returns the element value e.Value.
+// It returns the element value e.value.
 // The element must not be nil.
 func (sl *SkipList) Remove(e *Element) interface{} {
 	if e.sl == sl {
@@ -202,6 +202,7 @@ func (sl *SkipList) Remove(e *Element) interface{} {
 	return e.value
 }
 
+// GetRank return the position if e is an element of skiplist sl.
 func (sl *SkipList) GetRank(e *Element) int {
 	if e.sl != sl {
 		return 0
@@ -228,7 +229,6 @@ func (sl *SkipList) GetRank(e *Element) int {
 }
 
 // GetElementByRank finds an element by ites rank. The rank argument needs bo be 1-based.
-// Note that is the first element e that GetRank(e.Value) == rank, and returns e or nil.
 func (sl *SkipList) GetElementByRank(rank int) *Element {
 	if rank <= 0 || rank > sl.len {
 		return nil
@@ -247,4 +247,17 @@ func (sl *SkipList) GetElementByRank(rank int) *Element {
 	}
 
 	return nil
+}
+
+// TryRank returns the rank insertion position, not insert
+func (sl *SkipList) TryRank(v Interface) int {
+	x := sl.head
+	rank := 1
+	for i := sl.level - 1; i >= 0; i-- {
+		for x.links[i].next != sl.tail && x.links[i].next.value.Less(v) {
+			rank += x.links[i].skip
+			x = x.links[i].next
+		}
+	}
+	return rank
 }

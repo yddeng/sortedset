@@ -60,16 +60,16 @@ func (z *SortedSet) Set(key Key, v Interface) {
 
 // Delete removes an element from the SortedSet
 // by its key.
-func (z *SortedSet) Delete(key Key) (ok bool) {
+func (z *SortedSet) Delete(key Key) (value interface{}) {
 	if e, ok := z.dict[key]; ok {
 		z.zsl.Remove(e)
 		delete(z.dict, key)
-		return true
+		return e.Value().(*element).value
 	}
-	return false
+	return nil
 }
 
-// GetValue returns value stored in the map by its key
+// GetValue returns value in the map by its key
 func (z *SortedSet) GetValue(key Key) (value interface{}, ok bool) {
 	if e, ok := z.dict[key]; ok {
 		return e.Value().(*element).value, true
@@ -85,7 +85,7 @@ func (z *SortedSet) GetRank(key Key) int {
 	return 0
 }
 
-// GetByRank
+// GetByRank returns key,value by rank.
 func (z *SortedSet) GetByRank(rank int) (Key, interface{}) {
 	if rank <= 0 || rank > len(z.dict) {
 		return "", nil

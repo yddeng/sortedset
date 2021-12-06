@@ -1,4 +1,4 @@
-package grank
+package sortedset
 
 import (
 	"fmt"
@@ -38,6 +38,7 @@ func TestNew(t *testing.T) {
 
 	t.Log(zs.GetRank("hello"))
 	t.Log(zs.GetData("hello"))
+	t.Log(zs.GetDataByRank(5))
 
 	// update
 	fmt.Println()

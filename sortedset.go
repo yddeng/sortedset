@@ -1,6 +1,6 @@
-package grank
+package sortedset
 
-import "github.com/yddeng/grank/skiplist"
+import "github.com/yddeng/sortedset/skiplist"
 
 // key type
 type Key string
@@ -82,12 +82,13 @@ func (this *SortedSet) GetRank(key Key) int {
 	return 0
 }
 
-func (this *SortedSet) GetDataByRank(rank int) interface{} {
+func (this *SortedSet) GetDataByRank(rank int) (Key, interface{}) {
 	if rank <= 0 || rank > len(this.dict) {
-		return nil
+		return "", nil
 	}
 	e := this.zsl.GetElementByRank(rank)
-	return e.Value().(*element).value
+	elem := e.Value().(*element)
+	return elem.key, elem.value
 }
 
 // Range implements ZRANGE

@@ -57,25 +57,48 @@ func TestNew(t *testing.T) {
 	})
 }
 ```
-```
-    sortedset_test.go:24: 6
-    sortedset_test.go:26: 5
-    sortedset_test.go:28: 2.2 true
-    sortedset_test.go:30: , 1.1
+```go
+type User struct {
+	name  string
+	level int
+	score int
+}
 
-    sortedset_test.go:38: 1  --  hello 6.6
-    sortedset_test.go:38: 2  --  world 5.5
-    sortedset_test.go:38: 3  --  you 5.5
-    sortedset_test.go:38: 4  --  how 3.3
-    sortedset_test.go:38: 5  --  are 3.3
-    sortedset_test.go:38: 6  --  , 1.1
+/*
+	分数从大到小排序
+	分数相同，按照等级排序
+	分数、等级都相同，按照名字排序
+*/
+func (this *User) Less(other interface{}) bool {
+	o := other.(*User)
+	if this.score > o.score {
+		return true
+	} else if this.score == o.score && this.level > o.level {
+		return true
+	} else if this.score == o.score && this.level == o.level && this.name > o.name {
+		return true
+	}
+	return false
+}
 
-    sortedset_test.go:44: 6.6
-    sortedset_test.go:48: 5  --  , 1.1
-    sortedset_test.go:48: 4  --  are 3.3
-    sortedset_test.go:48: 3  --  how 3.3
-    sortedset_test.go:48: 2  --  you 5.5
-    sortedset_test.go:48: 1  --  world 5.5
+func TestNew2(t *testing.T) {
+	zs := New()
+
+	zs.Set("u1", &User{name: "u1", level: 2, score: 30})
+	zs.Set("u2", &User{name: "u2", level: 2, score: 40})
+	zs.Set("u3", &User{name: "u3", level: 3, score: 30})
+	zs.Set("u4", &User{name: "u4", level: 3, score: 30})
+
+	zs.Range(1, zs.Len(), func(key Key, value interface{}) {
+		t.Log(key, value.(*User))
+	})
+}
+
+// output
+sortedset_test.go:85: u2 &{u2 2 40}
+sortedset_test.go:85: u4 &{u4 3 30}
+sortedset_test.go:85: u3 &{u3 3 30}
+sortedset_test.go:85: u1 &{u1 2 30}
 ```
 
 

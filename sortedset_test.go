@@ -49,3 +49,39 @@ func TestNew(t *testing.T) {
 		rank--
 	})
 }
+
+type User struct {
+	name  string
+	level int
+	score int
+}
+
+/*
+	分数从大到小排序
+	分数相同，按照等级排序
+	分数、等级都相同，按照名字排序
+*/
+func (this *User) Less(other interface{}) bool {
+	o := other.(*User)
+	if this.score > o.score {
+		return true
+	} else if this.score == o.score && this.level > o.level {
+		return true
+	} else if this.score == o.score && this.level == o.level && this.name > o.name {
+		return true
+	}
+	return false
+}
+
+func TestNew2(t *testing.T) {
+	zs := New()
+
+	zs.Set("u1", &User{name: "u1", level: 2, score: 30})
+	zs.Set("u2", &User{name: "u2", level: 2, score: 40})
+	zs.Set("u3", &User{name: "u3", level: 3, score: 30})
+	zs.Set("u4", &User{name: "u4", level: 3, score: 30})
+
+	zs.Range(1, zs.Len(), func(key Key, value interface{}) {
+		t.Log(key, value.(*User))
+	})
+}

@@ -37,8 +37,8 @@ func TestNew(t *testing.T) {
 	})
 
 	t.Log(zs.GetRank("hello"))
-	t.Log(zs.GetData("hello"))
-	t.Log(zs.GetDataByRank(5))
+	t.Log(zs.GetValue("hello"))
+	t.Log(zs.GetByRank(5))
 
 	// update
 	fmt.Println()

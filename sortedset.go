@@ -1,6 +1,8 @@
 package sortedset
 
-import "github.com/yddeng/sortedset/skiplist"
+import (
+	"github.com/yddeng/sortedset/skiplist"
+)
 
 // key type
 type Key string
@@ -28,14 +30,14 @@ type SortedSet struct {
 func New() *SortedSet { return new(SortedSet).Init() }
 
 // Init initializes or clears sortedset z.
-func (this *SortedSet) Init() *SortedSet {
-	this.dict = map[Key]*skiplist.Element{}
-	if this.zsl == nil {
-		this.zsl = skiplist.New()
+func (z *SortedSet) Init() *SortedSet {
+	z.dict = map[Key]*skiplist.Element{}
+	if z.zsl == nil {
+		z.zsl = skiplist.New()
 	} else {
-		this.zsl.Init()
+		z.zsl.Init()
 	}
-	return this
+	return z
 }
 
 // Len returns counts of elements
@@ -44,49 +46,51 @@ func (z *SortedSet) Len() int {
 }
 
 // Set is used to add or update an element
-func (this *SortedSet) Set(key Key, v Interface) {
-	if e, ok := this.dict[key]; ok {
-		this.zsl.Remove(e)
+func (z *SortedSet) Set(key Key, v Interface) {
+	if e, ok := z.dict[key]; ok {
+		z.zsl.Remove(e)
 	}
 	ele := &element{
 		key:   key,
 		value: v,
 	}
-	e := this.zsl.Insert(ele)
-	this.dict[key] = e
+	e := z.zsl.Insert(ele)
+	z.dict[key] = e
 }
 
 // Delete removes an element from the SortedSet
 // by its key.
-func (this *SortedSet) Delete(key Key) (ok bool) {
-	if e, ok := this.dict[key]; ok {
-		this.zsl.Remove(e)
-		delete(this.dict, key)
+func (z *SortedSet) Delete(key Key) (ok bool) {
+	if e, ok := z.dict[key]; ok {
+		z.zsl.Remove(e)
+		delete(z.dict, key)
 		return true
 	}
 	return false
 }
 
-// GetData returns data stored in the map by its key
-func (this *SortedSet) GetData(key Key) (data interface{}, ok bool) {
-	if e, ok := this.dict[key]; ok {
+// GetValue returns value stored in the map by its key
+func (z *SortedSet) GetValue(key Key) (value interface{}, ok bool) {
+	if e, ok := z.dict[key]; ok {
 		return e.Value().(*element).value, true
 	}
 	return nil, false
 }
 
-func (this *SortedSet) GetRank(key Key) int {
-	if e, ok := this.dict[key]; ok {
+// GetRank returns the rank of the element specified by key
+func (z *SortedSet) GetRank(key Key) int {
+	if e, ok := z.dict[key]; ok {
 		return e.Rank()
 	}
 	return 0
 }
 
-func (this *SortedSet) GetDataByRank(rank int) (Key, interface{}) {
-	if rank <= 0 || rank > len(this.dict) {
+// GetByRank
+func (z *SortedSet) GetByRank(rank int) (Key, interface{}) {
+	if rank <= 0 || rank > len(z.dict) {
 		return "", nil
 	}
-	e := this.zsl.GetElementByRank(rank)
+	e := z.zsl.GetElementByRank(rank)
 	elem := e.Value().(*element)
 	return elem.key, elem.value
 }

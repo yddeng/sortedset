@@ -73,7 +73,7 @@ func TestNew(t *testing.T) {
 
 	t.Log(l.GetElementByRank(1).Value(), l.GetElementByRank(5).Value())
 
-	// tryRank
-	t.Log(l.TryRank(&User{name: "try1", score: 7}))
-	t.Log(l.TryRank(&User{name: "try2", score: 4}))
+	// TestRank
+	t.Log(l.TestRank(&User{name: "try1", score: 7}))
+	t.Log(l.TestRank(&User{name: "try2", score: 4}))
 }

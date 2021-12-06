@@ -249,8 +249,8 @@ func (sl *SkipList) GetElementByRank(rank int) *Element {
 	return nil
 }
 
-// TryRank returns the rank insertion position, not insert
-func (sl *SkipList) TryRank(v Interface) int {
+// TestRank returns the rank insertion position, not insert
+func (sl *SkipList) TestRank(v Interface) int {
 	x := sl.head
 	rank := 1
 	for i := sl.level - 1; i >= 0; i-- {

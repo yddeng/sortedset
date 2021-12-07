@@ -22,16 +22,16 @@ func TestNew(t *testing.T) {
 
 	l := New()
 
-	e := l.Insert(&User{name: "1", score: 1})
+	e, r1 := l.Insert(&User{name: "1", score: 1})
 	l.Insert(&User{name: "4", score: 4})
 	l.Insert(&User{name: "6", score: 6})
 	l.Insert(&User{name: "3", score: 3})
 	l.Insert(&User{name: "5", score: 5})
 	l.Insert(&User{name: "2", score: 2})
 	l.Insert(&User{name: "33", score: 3})
-	e2 := l.Insert(&User{name: "11", score: 1})
+	e2, r2 := l.Insert(&User{name: "11", score: 1})
 
-	t.Log(l.Len())
+	t.Log(l.Len(), r1, r2)
 	for e, i := l.Front(), 1; e != nil; e, i = e.Next(), i+1 {
 		u := e.Value().(*User)
 		t.Logf("%d, user(%s,%d)", i, u.name, u.score)
@@ -47,7 +47,7 @@ func TestNew(t *testing.T) {
 
 	l.Remove(e)
 	t.Log(l.Len(), e.Rank(), e2.Rank(), l.GetRank(e2))
-	e = l.Insert(e.Value().(*User))
+	e, r1 = l.Insert(e.Value().(*User))
 	t.Log(l.Len(), e.Rank(), e2.Rank(), l.GetRank(e2))
 
 	for e, i := l.Front(), 1; e != nil; e, i = e.Next(), i+1 {

@@ -31,7 +31,7 @@ func TestNew(t *testing.T) {
 
 	// update
 	fmt.Println()
-	zs.Set("hello", Score(6.6))
+	t.Log(zs.Set("hello", Score(6.6)))
 	// range
 	rank := 1
 	zs.Range(1, zs.Len(), func(key Key, value interface{}) {

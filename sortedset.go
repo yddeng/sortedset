@@ -45,17 +45,17 @@ func (z *SortedSet) Len() int {
 	return z.sl.Len()
 }
 
-// Set is used to add or update an element
-func (z *SortedSet) Set(key Key, v Interface) {
+// Set is used to add or update an element,returns
+// the rank where it would be inserted.
+func (z *SortedSet) Set(key Key, v Interface) (rank int) {
 	if e, ok := z.dict[key]; ok {
 		z.sl.Remove(e)
 	}
-	ele := &element{
-		key:   key,
-		value: v,
-	}
-	e := z.sl.Insert(ele)
+	var e *skiplist.Element
+	ele := &element{key: key, value: v}
+	e, rank = z.sl.Insert(ele)
 	z.dict[key] = e
+	return
 }
 
 // Delete removes an element from the SortedSet

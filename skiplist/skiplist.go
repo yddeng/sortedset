@@ -117,15 +117,18 @@ func (sl *SkipList) Back() *Element {
 	return sl.tail.links[0].prev
 }
 
-// Insert inserts v, increments sl.length, and returns a new element of wrap v.
-func (sl *SkipList) Insert(v Interface) *Element {
-	x := sl.head
+// Insert inserts v, increments sl.length, and returns a new element of wrap v
+// and the rank where it would be inserted.
+func (sl *SkipList) Insert(v Interface) (x *Element, rank int) {
+	x = sl.head
+	rank = 1
 	sl.rank[sl.level-1] = 0
 	for i := sl.level - 1; i >= 0; i-- {
 		if i != sl.level-1 {
 			sl.rank[i] = sl.rank[i+1]
 		}
 		for x.links[i].next != sl.tail && x.links[i].next.value.Less(v) {
+			rank += x.links[i].skip
 			sl.rank[i] += x.links[i].skip
 			x = x.links[i].next
 		}
@@ -160,7 +163,7 @@ func (sl *SkipList) Insert(v Interface) *Element {
 
 	sl.len += 1
 
-	return x
+	return
 }
 
 // Remove removes e from sl if e is an element of skiplist sl.

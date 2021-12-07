@@ -17,25 +17,9 @@ func (this *User) Less(other interface{}) bool {
 	return this.score >= other.(*User).score
 }
 
-func printSl(sl *SkipList) {
-	for i := sl.level - 1; i >= 0; i-- {
-		str := []string{}
-		for e := sl.head; e != sl.tail; e = e.links[i].next {
-			str = append(str, fmt.Sprintf("-%d->%v", e.links[i].skip, e.links[i].next.value))
-		}
-		fmt.Println(strings.Join(str, " "))
-	}
-
-	str := ""
-	for e, i := sl.Front(), 1; e != nil; e, i = e.Next(), i+1 {
-		str += fmt.Sprintf("%v  ", e.value)
-	}
-	fmt.Println(str)
-
-}
-
 func TestNew(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
+
 	l := New()
 
 	e := l.Insert(&User{name: "1", score: 1})
@@ -73,7 +57,31 @@ func TestNew(t *testing.T) {
 
 	t.Log(l.GetElementByRank(1).Value(), l.GetElementByRank(5).Value())
 
-	// TestRank
-	t.Log(l.TestRank(&User{name: "try1", score: 7}))
-	t.Log(l.TestRank(&User{name: "try2", score: 4}))
+	// Search
+	// find the smallest rank in descending order.
+	u := &User{score: 3}
+	f := func(i Interface) bool {
+		return i.(*User).score > u.score
+	}
+	t.Log(l.Search(l.Len(), f))
+
+	// WouldBeInserted
+	t.Log(l.WouldBeInserted(&User{score: 5}))
+}
+
+func printSl(sl *SkipList) {
+	for i := sl.level - 1; i >= 0; i-- {
+		str := []string{}
+		for e := sl.head; e != sl.tail; e = e.links[i].next {
+			str = append(str, fmt.Sprintf("-%d->%v", e.links[i].skip, e.links[i].next.value))
+		}
+		fmt.Println(strings.Join(str, " "))
+	}
+
+	str := ""
+	for e, i := sl.Front(), 1; e != nil; e, i = e.Next(), i+1 {
+		str += fmt.Sprintf("%v  ", e.value)
+	}
+	fmt.Println(str)
+
 }

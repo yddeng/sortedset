@@ -2,6 +2,7 @@ package sortedset
 
 import (
 	"github.com/yddeng/sortedset/skiplist"
+	"sort"
 )
 
 // key type
@@ -97,16 +98,22 @@ func (z *SortedSet) GetByRank(rank int) (Key, interface{}) {
 
 // Range implements ZRANGE
 func (z *SortedSet) Range(start, end int, f func(key Key, value interface{})) {
+	var elem *element
 	for e, span := z.zsl.GetElementByRank(start), end-start+1; span > 0 && e != nil; e, span = e.Next(), span-1 {
-		elem := e.Value().(*element)
+		elem = e.Value().(*element)
 		f(elem.key, elem.value)
 	}
 }
 
 // RevRange implements ZREVRANGE
 func (z *SortedSet) RevRange(start, end int, f func(key Key, value interface{})) {
+	var elem *element
 	for e, span := z.zsl.GetElementByRank(end), end-start+1; span > 0 && e != nil; e, span = e.Prev(), span-1 {
-		elem := e.Value().(*element)
+		elem = e.Value().(*element)
 		f(elem.key, elem.value)
 	}
+}
+
+func (z *SortedSet) RangeSort() {
+	sort.Search()
 }

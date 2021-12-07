@@ -249,15 +249,21 @@ func (sl *SkipList) GetElementByRank(rank int) *Element {
 	return nil
 }
 
-// TestRank returns the rank insertion position, not insert
-func (sl *SkipList) TestRank(v Interface) int {
+// Search calls f(i) only for rank in the range [1, n+1].
+func (sl *SkipList) Search(n int, f func(i Interface) bool) (rank int) {
 	x := sl.head
-	rank := 1
 	for i := sl.level - 1; i >= 0; i-- {
-		for x.links[i].next != sl.tail && x.links[i].next.value.Less(v) {
+		for x.links[i].next != sl.tail && rank+x.links[i].skip <= n && f(x.links[i].next.value) {
 			rank += x.links[i].skip
 			x = x.links[i].next
 		}
 	}
-	return rank
+	return rank + 1
+}
+
+// WouldBeInserted returns the rank where it would be inserted.
+func (sl *SkipList) WouldBeInserted(v Interface) int {
+	return sl.Search(sl.Len(), func(i Interface) bool {
+		return i.Less(v)
+	})
 }

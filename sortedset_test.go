@@ -48,6 +48,15 @@ func TestNew(t *testing.T) {
 		t.Log(rank, " -- ", key, value.(Score))
 		rank--
 	})
+
+	// search
+	score := Score(3.3)
+	t.Log(zs.Search(zs.Len(), func(i Interface) bool {
+		return i.(Score) > score
+	}))
+
+	// would be inserted
+	t.Log(zs.WouldBeInserted(score))
 }
 
 type User struct {

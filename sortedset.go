@@ -86,13 +86,13 @@ func (z *SortedSet) GetRank(key Key) int {
 }
 
 // GetByRank returns key,value by rank.
-func (z *SortedSet) GetByRank(rank int) (Key, interface{}) {
+func (z *SortedSet) GetByRank(rank int) (key Key, value interface{}) {
 	if rank <= 0 || rank > len(z.dict) {
-		return "", nil
+		return
 	}
 	e := z.sl.GetElementByRank(rank)
-	elem := e.Value().(*element)
-	return elem.key, elem.value
+	key, value = e.Value().(*element).key, e.Value().(*element).value
+	return
 }
 
 // Range implements ZRANGE

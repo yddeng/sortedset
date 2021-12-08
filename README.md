@@ -72,22 +72,18 @@ func TestNew(t *testing.T) {
 	fmt.Println()
 	zs.Set("hello", Score(6.6))
 	// range
-	rank := 1
-	zs.Range(1, zs.Len(), func(key Key, value interface{}) bool {
+	zs.Range(1, zs.Len(), func(rank int, key Key, value interface{}) bool {
 		t.Log(rank, " -- ", key, value.(Score))
-		rank++
-        return true
+		return true
 	})
 
 	// delete
 	fmt.Println()
-	t.Log(zs.Delete("hello"))       // 6.6
+	t.Log(zs.Delete("hello"))
 	// RevRange
-	rank = zs.Len()
-	zs.RevRange(1, zs.Len(), func(key Key, value interface{}) bool {
+	zs.RevRange(1, zs.Len(), func(rank int, key Key, value interface{}) bool {
 		t.Log(rank, " -- ", key, value.(Score))
-		rank--  
-        return true
+		return true
 	})
 
 	// search
@@ -133,15 +129,15 @@ func TestNew2(t *testing.T) {
 	zs.Set("u3", &User{name: "u3", level: 3, score: 30})
 	zs.Set("u4", &User{name: "u4", level: 3, score: 30})
 
-	zs.Range(1, zs.Len(), func(key Key, value interface{}) bool {
-		t.Log(key, value.(*User))
+	zs.Range(1, zs.Len(), func(rank int, key Key, value interface{}) bool {
+		t.Log(rank, " -- ", key, value.(*User))
 		return true
 	})
 }
 
 // output
-sortedset_test.go:85: u2 &{u2 2 40}
-sortedset_test.go:85: u4 &{u4 3 30}
-sortedset_test.go:85: u3 &{u3 3 30}
-sortedset_test.go:85: u1 &{u1 2 30}
+    sortedset_test.go:92: 1  --  u2 &{u2 2 40}
+    sortedset_test.go:92: 2  --  u4 &{u4 3 30}
+    sortedset_test.go:92: 3  --  u3 &{u3 3 30}
+    sortedset_test.go:92: 4  --  u1 &{u1 2 30}
 ```

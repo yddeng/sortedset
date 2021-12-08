@@ -96,20 +96,26 @@ func (z *SortedSet) GetByRank(rank int) (key Key, value interface{}) {
 }
 
 // Range implements ZRANGE
-func (z *SortedSet) Range(start, end int, f func(key Key, value interface{})) {
+// If f returns false, range stops the iteration.
+func (z *SortedSet) Range(start, end int, f func(key Key, value interface{}) bool) {
 	var elem *element
 	for e, span := z.sl.GetElementByRank(start), end-start+1; span > 0 && e != nil; e, span = e.Next(), span-1 {
 		elem = e.Value().(*element)
-		f(elem.key, elem.value)
+		if !f(elem.key, elem.value) {
+			return
+		}
 	}
 }
 
 // RevRange implements ZREVRANGE
-func (z *SortedSet) RevRange(start, end int, f func(key Key, value interface{})) {
+// If f returns false, range stops the iteration.
+func (z *SortedSet) RevRange(start, end int, f func(key Key, value interface{}) bool) {
 	var elem *element
 	for e, span := z.sl.GetElementByRank(end), end-start+1; span > 0 && e != nil; e, span = e.Prev(), span-1 {
 		elem = e.Value().(*element)
-		f(elem.key, elem.value)
+		if !f(elem.key, elem.value) {
+			return
+		}
 	}
 }
 

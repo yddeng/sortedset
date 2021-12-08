@@ -73,9 +73,10 @@ func TestNew(t *testing.T) {
 	zs.Set("hello", Score(6.6))
 	// range
 	rank := 1
-	zs.Range(1, zs.Len(), func(key Key, value interface{}) {
+	zs.Range(1, zs.Len(), func(key Key, value interface{}) bool {
 		t.Log(rank, " -- ", key, value.(Score))
 		rank++
+        return true
 	})
 
 	// delete
@@ -83,9 +84,10 @@ func TestNew(t *testing.T) {
 	t.Log(zs.Delete("hello"))       // 6.6
 	// RevRange
 	rank = zs.Len()
-	zs.RevRange(1, zs.Len(), func(key Key, value interface{}) {
+	zs.RevRange(1, zs.Len(), func(key Key, value interface{}) bool {
 		t.Log(rank, " -- ", key, value.(Score))
-		rank--
+		rank--  
+        return true
 	})
 
 	// search
@@ -131,8 +133,9 @@ func TestNew2(t *testing.T) {
 	zs.Set("u3", &User{name: "u3", level: 3, score: 30})
 	zs.Set("u4", &User{name: "u4", level: 3, score: 30})
 
-	zs.Range(1, zs.Len(), func(key Key, value interface{}) {
+	zs.Range(1, zs.Len(), func(key Key, value interface{}) bool {
 		t.Log(key, value.(*User))
+		return true
 	})
 }
 

@@ -79,8 +79,9 @@ type SkipList struct {
 	level  int
 }
 
-// Init initializes or clears skiplist sl.
-func (sl *SkipList) Init() *SkipList {
+// New returns an initialized skiplist.
+func New() *SkipList {
+	sl := new(SkipList)
 	sl.level = 1
 	sl.head = newElement(sl, SKIPLIST_MAXLEVEL, nil)
 	sl.tail = newElement(sl, SKIPLIST_MAXLEVEL, nil)
@@ -93,9 +94,6 @@ func (sl *SkipList) Init() *SkipList {
 	}
 	return sl
 }
-
-// New returns an initialized skiplist.
-func New() *SkipList { return new(SkipList).Init() }
 
 // Len returns the number of elements of skiplist sl.
 // The complexity is O(1).

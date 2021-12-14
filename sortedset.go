@@ -32,11 +32,7 @@ func New() *SortedSet { return new(SortedSet).Init() }
 // Init initializes or clears sortedset z.
 func (z *SortedSet) Init() *SortedSet {
 	z.dict = map[Key]*skiplist.Element{}
-	if z.sl == nil {
-		z.sl = skiplist.New()
-	} else {
-		z.sl.Init()
-	}
+	z.sl = skiplist.New()
 	return z
 }
 

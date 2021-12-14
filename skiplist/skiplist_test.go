@@ -55,7 +55,7 @@ func TestNew(t *testing.T) {
 		t.Logf("%d, user(%s,%d)", i, u.name, u.score)
 	}
 
-	t.Log(l.GetElementByRank(1).Value(), l.GetElementByRank(5).Value())
+	t.Log(l.Select(1).Value(), l.Select(5).Value())
 
 	// Search
 	// find the smallest rank in descending order.

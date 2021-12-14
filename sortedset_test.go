@@ -27,7 +27,7 @@ func TestNew(t *testing.T) {
 	// get value by key
 	t.Log(zs.GetValue("hello"))
 	// get key,value by rank
-	t.Log(zs.GetByRank(zs.Len()))
+	t.Log(zs.Select(zs.Len()))
 
 	// update
 	fmt.Println()

@@ -231,8 +231,8 @@ func (sl *SkipList) GetRank(e *Element) int {
 	return rank
 }
 
-// GetElementByRank finds an element by ites rank. The rank argument needs bo be 1-based.
-func (sl *SkipList) GetElementByRank(rank int) *Element {
+// Select an element by ites rank. The rank argument needs bo be 1-based.
+func (sl *SkipList) Select(rank int) *Element {
 	if rank <= 0 || rank > sl.len {
 		return nil
 	}

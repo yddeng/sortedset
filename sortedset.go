@@ -85,12 +85,12 @@ func (z *SortedSet) GetRank(key Key) int {
 	return 0
 }
 
-// GetByRank returns key,value by rank.
-func (z *SortedSet) GetByRank(rank int) (key Key, value interface{}) {
+// Select returns key,value by rank.
+func (z *SortedSet) Select(rank int) (key Key, value interface{}) {
 	if rank <= 0 || rank > len(z.dict) {
 		return
 	}
-	e := z.sl.GetElementByRank(rank)
+	e := z.sl.Select(rank)
 	key, value = e.Value().(*element).key, e.Value().(*element).value
 	return
 }
@@ -99,7 +99,7 @@ func (z *SortedSet) GetByRank(rank int) (key Key, value interface{}) {
 // If f returns false, range stops the iteration.
 func (z *SortedSet) Range(start, end int, f func(rank int, key Key, value interface{}) bool) {
 	var elem *element
-	for e, i := z.sl.GetElementByRank(start), start; i <= end && e != nil; e, i = e.Next(), i+1 {
+	for e, i := z.sl.Select(start), start; i <= end && e != nil; e, i = e.Next(), i+1 {
 		elem = e.Value().(*element)
 		if !f(i, elem.key, elem.value) {
 			return
@@ -111,7 +111,7 @@ func (z *SortedSet) Range(start, end int, f func(rank int, key Key, value interf
 // If f returns false, range stops the iteration.
 func (z *SortedSet) RevRange(start, end int, f func(rank int, key Key, value interface{}) bool) {
 	var elem *element
-	for e, i := z.sl.GetElementByRank(end), end; i >= start && e != nil; e, i = e.Prev(), i-1 {
+	for e, i := z.sl.Select(end), end; i >= start && e != nil; e, i = e.Prev(), i-1 {
 		elem = e.Value().(*element)
 		if !f(i, elem.key, elem.value) {
 			return

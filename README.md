@@ -66,7 +66,7 @@ func TestNew(t *testing.T) {
 	// get value by key 
 	t.Log(zs.GetValue("hello"))    // 2.2 true  
 	// get key,value by rank
-	t.Log(zs.GetByRank(zs.Len()))  // , 1.1
+	t.Log(zs.Select(zs.Len()))     // , 1.1
 
 	// update
 	fmt.Println()
@@ -135,9 +135,9 @@ func TestNew2(t *testing.T) {
 	})
 }
 
-// output
-    sortedset_test.go:92: 1  --  u2 &{u2 2 40}
-    sortedset_test.go:92: 2  --  u4 &{u4 3 30}
-    sortedset_test.go:92: 3  --  u3 &{u3 3 30}
-    sortedset_test.go:92: 4  --  u1 &{u1 2 30}
+//    output
+//    sortedset_test.go:92: 1  --  u2 &{u2 2 40}
+//    sortedset_test.go:92: 2  --  u4 &{u4 3 30}
+//    sortedset_test.go:92: 3  --  u3 &{u3 3 30}
+//    sortedset_test.go:92: 4  --  u1 &{u1 2 30}
 ```

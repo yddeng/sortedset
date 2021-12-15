@@ -93,3 +93,71 @@ func TestNew2(t *testing.T) {
 		return true
 	})
 }
+
+type Int32 int32
+
+// 递增序列，值相等按照先后顺序排列
+func (i1 Int32) Less(other interface{}) bool {
+	return i1 <= other.(Int32)
+}
+
+func TestGetByScore(t *testing.T) {
+	l := New()
+	l.Set("1", Int32(1))
+	l.Set("2", Int32(2))
+	l.Set("3", Int32(4))
+	l.Set("4", Int32(5))
+	l.Set("5", Int32(2))
+	l.Set("6", Int32(3))
+
+	l.Range(1, l.Len(), func(rank int, key Key, value interface{}) bool {
+		t.Log(rank, "--", key, value)
+		return true
+	})
+
+	// 查找分数区间 [2,5]
+	left := l.Search(l.Len(), func(i Interface) bool {
+		return Int32(2) > i.(Int32)
+	})
+	right := l.Search(l.Len(), func(i Interface) bool {
+		return Int32(5) >= i.(Int32)
+	})
+	t.Log(left, right)
+	if right > l.Len() {
+		right = l.Len()
+	}
+	l.Range(left, right, func(rank int, key Key, value interface{}) bool {
+		t.Log(rank, "--", key, value)
+		return true
+	})
+}
+
+// 获取用户排名附近用户
+func TestGetAround(t *testing.T) {
+	l := New()
+	l.Set("1", Int32(1))
+	l.Set("2", Int32(2))
+	l.Set("3", Int32(4))
+	l.Set("4", Int32(5))
+	l.Set("5", Int32(2))
+	l.Set("6", Int32(3))
+
+	/*
+	 获取用户排名前后2个位置的用户
+	*/
+	rank := l.GetRank("3")
+
+	left := rank - 2
+	right := rank + 2
+	if left < 1 {
+		left = 1
+	}
+	if right > l.Len() {
+		right = l.Len()
+	}
+	t.Log(left, rank, right)
+	l.Range(left, right, func(rank int, key Key, value interface{}) bool {
+		t.Log(rank, "--", key, value)
+		return true
+	})
+}

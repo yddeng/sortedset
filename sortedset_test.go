@@ -109,6 +109,7 @@ func TestGetByScore(t *testing.T) {
 	l.Set("4", Int32(5))
 	l.Set("5", Int32(2))
 	l.Set("6", Int32(3))
+	l.Set("7", Int32(7))
 
 	l.Range(1, l.Len(), func(rank int, key Key, value interface{}) bool {
 		t.Log(rank, "--", key, value)
@@ -117,15 +118,19 @@ func TestGetByScore(t *testing.T) {
 
 	// 查找分数区间 [2,5]
 	left := l.Search(l.Len(), func(i Interface) bool {
-		return Int32(2) > i.(Int32)
+		return i.(Int32) < Int32(2)
 	})
 	right := l.Search(l.Len(), func(i Interface) bool {
-		return Int32(5) >= i.(Int32)
+		return i.(Int32) <= Int32(5)
 	})
-	t.Log(left, right)
+
+	right = right - 1 // search 是模拟插入动作，根据自定义的规则返回将要插入的位置，故减一
+
 	if right > l.Len() {
+		// 根据自定义的规则返回将要插入的位置，可能大于长度即最末插入
 		right = l.Len()
 	}
+	t.Log(left, right)
 	l.Range(left, right, func(rank int, key Key, value interface{}) bool {
 		t.Log(rank, "--", key, value)
 		return true

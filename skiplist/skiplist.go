@@ -1,15 +1,13 @@
 package skiplist
 
-import (
-	"math/rand"
-)
+import "math/rand"
 
 const SKIPLIST_MAXLEVEL = 32
-const SKIPLIST_BRANCH = 4
+const SKIPLIST_BRANCH = 0.55
 
 func randomLevel() int {
 	level := 1
-	for level < SKIPLIST_MAXLEVEL && (rand.Int31()&0xFFFF)%SKIPLIST_BRANCH == 0 {
+	for rand.Float64() < SKIPLIST_BRANCH && level < SKIPLIST_MAXLEVEL {
 		level += 1
 	}
 	return level

@@ -2,10 +2,12 @@ package sortedset
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
 	"testing"
 )
 
-type Score float64
+type Score int
 
 func (this Score) Less(other interface{}) bool {
 	return this >= other.(Score)
@@ -14,12 +16,12 @@ func (this Score) Less(other interface{}) bool {
 func TestNew(t *testing.T) {
 	zs := New()
 	// add
-	zs.Set("hello", Score(2.2))
-	zs.Set("world", Score(5.5))
-	zs.Set(",", Score(1.1))
-	zs.Set("how", Score(3.3))
-	zs.Set("are", Score(3.3))
-	zs.Set("you", Score(5.5))
+	zs.Set("hello", Score(2))
+	zs.Set("world", Score(5))
+	zs.Set(",", Score(1))
+	zs.Set("how", Score(3))
+	zs.Set("are", Score(3))
+	zs.Set("you", Score(5))
 
 	t.Log(zs.Len())
 	// get rank by key
@@ -31,7 +33,7 @@ func TestNew(t *testing.T) {
 
 	// update
 	fmt.Println()
-	t.Log(zs.Set("hello", Score(6.6)))
+	t.Log(zs.Set("hello", Score(6)))
 	// range
 	zs.Range(1, zs.Len(), func(rank int, key Key, value interface{}) bool {
 		t.Log(rank, " -- ", key, value.(Score))
@@ -48,7 +50,7 @@ func TestNew(t *testing.T) {
 	})
 
 	// search
-	score := Score(3.3)
+	score := Score(3)
 	t.Log(zs.Search(zs.Len(), func(i Interface) bool {
 		return i.(Score) > score
 	}))
@@ -165,4 +167,13 @@ func TestGetAround(t *testing.T) {
 		t.Log(rank, "--", key, value)
 		return true
 	})
+}
+
+// go test -v -run=^$ -bench=. -count=4
+func BenchmarkSortedSet_Set(b *testing.B) {
+	l := New()
+	for i := 1; i <= b.N; i++ {
+		score := rand.Int()
+		l.Set(Key(strconv.Itoa(i)), Score(score))
+	}
 }
